@@ -3,23 +3,35 @@
 #include "Connection.h"
 #include "WinsockInitializer.h"
 
+#include "Capsulator.h"
+#include "Cryptor.h"
+#include "Signer.h"
+
 class Server final
 {
 public:
-	static void Start(u_short port);
-	static void Stop();
+	Server() noexcept;
 
-	static SOCKET GetSocket();
+	void Start();
+	void Stop();
 
-	static void RemoveConnection(const Connection& connection);
+	SOCKET GetSocket() const;
+
+	//void RemoveConnection(const Connection& connection);
 
 private:
-	static void CleanUpServer();
+	void CleanUpServer();
 
-	static SOCKET m_serverSocket;
-	static size_t m_maxConnections;
-	static std::atomic_bool m_isStopped;
-	static std::condition_variable m_conditionVariable;
-	static std::mutex m_serverMutex;
-	static std::list<Connection> m_connections;
+	std::shared_ptr<Server> This;
+
+	u_short Port;
+	SOCKET ServerSocket;
+	size_t MaxConnections;
+	std::atomic_bool IsStopped;
+	std::condition_variable ConditionVariable;
+	std::mutex ServerMutex;
+	std::vector<std::shared_ptr<Connection>> Connections;
+
+	Capsulator::KyberKeyPair KyberKeyPair;
+	Signer::DilithiumKeyPair DilithiumKeyPair;
 };

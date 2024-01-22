@@ -5,21 +5,37 @@
 #include "Server.h"
 
 Connection::Connection() noexcept :
+    IsStopped(true),
+    TargetServer(),
     ClientSocket(INVALID_SOCKET)
 {
 
 }
 
-Connection::Connection(const Connection& connection) noexcept
+Connection::Connection(std::shared_ptr<Server> server) noexcept :
+    IsStopped(true),
+    TargetServer(server),
+    ClientSocket(INVALID_SOCKET)
 {
+
+}
+
+Connection::Connection(const Connection& connection) noexcept :
+    IsStopped(true),
+    TargetServer(connection.TargetServer),
+    ClientSocket(INVALID_SOCKET)
+{
+    UNREFERENCED_PARAMETER(connection);
     Start();
 }
 
 Connection::Connection(Connection&& connection) noexcept :
     IsStopped(connection.IsStopped.load()),
-    ClientSocket(connection.ClientSocket)
+    TargetServer(std::move(connection.TargetServer)),
+    ClientSocket(connection.ClientSocket),
+    Receiver(std::move(connection.Receiver))
 {
-    Receiver.swap(connection.Receiver);
+
 }
 
 bool Connection::operator==(const Connection& connection) const noexcept
@@ -29,10 +45,11 @@ bool Connection::operator==(const Connection& connection) const noexcept
 
 void Connection::Start()
 {
-    spdlog::info(L"Start Connection");
+    spdlog::info(L"Start connection");
+    IsStopped = false;
     SOCKADDR_IN6 clientInfo{};
     int clientInfoSize = sizeof(clientInfo);
-    if ((ClientSocket = accept(Server::GetSocket(), (SOCKADDR*)&clientInfo, &clientInfoSize)) == INVALID_SOCKET)
+    if ((ClientSocket = accept(TargetServer.lock()->GetSocket(), (SOCKADDR*)&clientInfo, &clientInfoSize)) == INVALID_SOCKET)
     {
         spdlog::error(L"accept failed: [{}]", WSAGetLastError());
         return;
@@ -43,55 +60,26 @@ void Connection::Start()
     Receiver = std::make_unique<std::jthread>(&Connection::Receive, this);
 }
 
-void Connection::Receive() const
+void Connection::Receive()
 {
-    spdlog::info(L"Start Receive");
+    spdlog::info(L"Start receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
     while (!IsStopped)
     {
-        spdlog::info(L">???<");
-        int bytesReceived = recv(m_clientSocket, messageInformationBuffer.data(), sizeof(MessageInformation), 0);
-        /*std::vector<char> messageInformationBuffer(sizeof(MessageInformation));
-        int bytesReceived = recv(m_clientSocket, messageInformationBuffer.data(), sizeof(MessageInformation), 0);
-        if (bytesReceived != sizeof(MessageInformation))
+        size_t keysSize = Capsulator::PublicBytes + Signer::PublicBytes;
+        std::vector<uint8_t> keys(keysSize);
+        int bytesReceived = recv(ClientSocket, reinterpret_cast<char*>(keys.data()), keysSize, 0);
+        if (bytesReceived <= 0)
         {
-            Console::PrintErrorLine(std::format(L"recv messageInformation failed: [{}]", WSAGetLastError()));
-            Stop();
-            return;
+            IsStopped = true;
         }
-        MessageInformation messageInformation = Message<MessageInformation>::Deserialize(messageInformationBuffer).GetData();
-        MessageInformation::MessagesTypes messageType = messageInformation.GetMessageType();
-        int messageSize = messageInformation.GetMessageSize();
-        std::vector<char> dataBuffer(messageSize);
-        bytesReceived = recv(m_clientSocket, dataBuffer.data(), messageSize, 0);
-        if (bytesReceived != messageSize)
+        std::string mes;
+        for (uint8_t& i : keys)
         {
-            Console::PrintErrorLine(std::format(L"recv data failed: [{}] received bytes | [{}] bytes", bytesReceived, messageSize));
-            Stop();
-            return;
+            mes += std::to_string(i) + " ";
         }
-        switch (messageType)
-        {
-        case MessageInformation::StringMessage:
-        {
-            Console::PrintLine(std::vformat(L"StringMessage: [{}]", std::make_wformat_args(StringMessage::Deserialize(dataBuffer).GetData())));
-            break;
-        }
-        default:
-        {
-            Console::PrintErrorLine(std::vformat(L"unknown messageType: [{}]", std::make_wformat_args(static_cast<int>(messageType))));
-            Stop();
-            return;
-        }
-        }*/
-    }
-    spdlog::info(L"Stop Receive");
-}
+        spdlog::info("KYBER KEY {}", mes);//spdlog::to_hex(std::begin(data), std::begin(data) + Capsulator::PublicBytes));
+        //spdlog::info("DILITHIUM KEY{}", data);//spdlog::to_hex(std::begin(data) + Capsulator::PublicBytes, std::begin(data) + Signer::PublicBytes));
 
-void Connection::Send() const
-{
-    spdlog::info(L"Start Send");
-    while (!IsStopped)
-    {
     }
-    spdlog::info(L"Stop Send");
+    spdlog::info(L"Stop receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
 }

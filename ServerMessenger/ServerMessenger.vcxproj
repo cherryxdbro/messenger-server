@@ -31,7 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.38.33130</VCToolsVersion>
+    <VCToolsVersion>14.39.33428</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -39,14 +39,14 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.38.33130</VCToolsVersion>
+    <VCToolsVersion>14.39.33428</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.38.33130</VCToolsVersion>
+    <VCToolsVersion>14.39.33428</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -54,7 +54,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.38.33130</VCToolsVersion>
+    <VCToolsVersion>14.39.33428</VCToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -78,11 +78,11 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KYBER_K=4;DILITHIUM_MODE=5;DILITHIUM_USE_AES;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>F:\CPP\ClientServer\Client\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -93,9 +93,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>F:\CPP\ClientServer\Client\spdlog\build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;Ws2_32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -103,11 +106,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KYBER_K=4;DILITHIUM_MODE=5;DILITHIUM_USE_AES;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>F:\CPP\ClientServer\Client\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -120,19 +123,22 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>F:\CPP\ClientServer\Client\spdlog\build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;Ws2_32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KYBER_K=4;DILITHIUM_MODE=5;DILITHIUM_USE_AES;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>F:\CPP\ClientServer\Client\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -142,9 +148,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>F:\CPP\ClientServer\Client\spdlog\build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;Ws2_32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -152,11 +161,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KYBER_K=4;DILITHIUM_MODE=5;DILITHIUM_USE_AES;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>F:\CPP\ClientServer\Client\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -168,14 +177,19 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>F:\CPP\ClientServer\Client\spdlog\build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>spdlog.lib;Ws2_32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
+    <ProjectReference />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Capsulator.cpp" />
     <ClCompile Include="Connection.cpp" />
+    <ClCompile Include="Cryptor.cpp" />
     <ClCompile Include="Message.cpp" />
-    <ClCompile Include="MessageInformation.cpp" />
+    <ClCompile Include="RandomBytes.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerMessenger.cpp" />
     <ClCompile Include="pch.cpp">
@@ -184,16 +198,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StringMessage.cpp" />
+    <ClCompile Include="Signer.cpp" />
     <ClCompile Include="WinsockInitializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Capsulator.h" />
     <ClInclude Include="Connection.h" />
+    <ClInclude Include="Cryptor.h" />
     <ClInclude Include="Message.h" />
-    <ClInclude Include="MessageInformation.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="StringMessage.h" />
+    <ClInclude Include="Signer.h" />
     <ClInclude Include="WinsockInitializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

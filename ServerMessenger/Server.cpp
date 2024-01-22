@@ -2,17 +2,20 @@
 
 #include "Server.h"
 
-SOCKET Server::m_serverSocket = INVALID_SOCKET;
-size_t Server::m_maxConnections = 100;
-std::atomic_bool Server::m_isStopped = true;
-std::condition_variable Server::m_conditionVariable;
-std::mutex Server::m_serverMutex;
-std::list<Connection> Server::m_connections;
+Server::Server() noexcept :
+    This(this),
+    Port(5678),
+    ServerSocket(INVALID_SOCKET),
+    MaxConnections(100),
+    IsStopped(true)
+{
 
-void Server::Start(u_short port)
+}
+
+void Server::Start()
 {
     spdlog::info(L"Start Server");
-    m_isStopped = false;
+    IsStopped = false;
     WinsockInitializer winsockInitializer;
     {
         if (winsockInitializer.WSAResult != 0)
@@ -21,7 +24,7 @@ void Server::Start(u_short port)
             Stop();
             return;
         }
-        if ((m_serverSocket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
+        if ((ServerSocket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
         {
             spdlog::error(L"socket failed: [{}]", WSAGetLastError());
             Stop();
@@ -30,21 +33,21 @@ void Server::Start(u_short port)
         SOCKADDR_IN6 localAddress{};
         localAddress.sin6_addr = in6addr_any;
         localAddress.sin6_family = AF_INET6;
-        localAddress.sin6_port = htons(port);
+        localAddress.sin6_port = htons(Port);
         int addressLength = sizeof(localAddress);
-        if (bind(m_serverSocket, (SOCKADDR*)&localAddress, addressLength) == SOCKET_ERROR)
+        if (bind(ServerSocket, (SOCKADDR*)&localAddress, addressLength) == SOCKET_ERROR)
         {
             spdlog::error(L"bind failed: [{}]", WSAGetLastError());
             Stop();
             return;
         }
-        if (listen(m_serverSocket, SOMAXCONN) == SOCKET_ERROR)
+        if (listen(ServerSocket, SOMAXCONN) == SOCKET_ERROR)
         {
             spdlog::error(L"listen failed: [{}]", WSAGetLastError());
             Stop();
             return;
         }
-        if (getsockname(m_serverSocket, (SOCKADDR*)&localAddress, &addressLength) == SOCKET_ERROR)
+        if (getsockname(ServerSocket, (SOCKADDR*)&localAddress, &addressLength) == SOCKET_ERROR)
         {
             spdlog::error(L"getsockname failed: [{}]", WSAGetLastError());
             Stop();
@@ -52,16 +55,16 @@ void Server::Start(u_short port)
         }
         spdlog::info(L"Listening on this port: [{}]", ntohs(localAddress.sin6_port));
     }
-	while (!m_isStopped)
+	while (!IsStopped)
 	{
-		std::unique_lock<std::mutex> lock(m_serverMutex);
-		m_conditionVariable.wait(lock, []()
+		std::unique_lock<std::mutex> lock(ServerMutex);
+		ConditionVariable.wait(lock, [this]()
             {
-                return m_connections.size() < m_maxConnections || m_isStopped;
+                return Connections.size() < MaxConnections || IsStopped;
             });
-		if (!m_isStopped)
+		if (!IsStopped)
 		{
-			m_connections.emplace_back(Connection()).Start();
+			Connections.emplace_back(std::make_shared<Connection>(This))->Start();
 		}
 	}
 }
@@ -69,30 +72,31 @@ void Server::Start(u_short port)
 void Server::Stop()
 {
     spdlog::info(L"Stop Server");
-	m_isStopped = true;
-	m_conditionVariable.notify_all();
+	IsStopped = true;
+	ConditionVariable.notify_all();
     CleanUpServer();
 }
 
 void Server::CleanUpServer()
 {
-    m_connections.clear();
-    if (m_serverSocket != INVALID_SOCKET)
+    Connections.clear();
+    if (ServerSocket != INVALID_SOCKET)
     {
-        closesocket(m_serverSocket);
+        closesocket(ServerSocket);
     }
 }
 
-SOCKET Server::GetSocket()
+SOCKET Server::GetSocket() const
 {
-    return m_serverSocket;
+    return ServerSocket;
 }
 
-void Server::RemoveConnection(const Connection& connection)
-{
-    m_connections.remove(connection);
-    if (!m_isStopped)
-    {
-        m_conditionVariable.notify_all();
-    }
-}
+//void Server::RemoveConnection(const Connection& connection)
+//{
+//    //std::remove(Connections.begin(),)
+//    //Connections.erase(Connections.begin() + connection - );
+//    if (!IsStopped)
+//    {
+//        ConditionVariable.notify_all();
+//    }
+//}
