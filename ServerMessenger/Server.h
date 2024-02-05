@@ -17,20 +17,18 @@ public:
 
 	SOCKET GetSocket() const;
 
-	//void RemoveConnection(const Connection& connection);
+	void RemoveConnection(const Connection& connection);
 
 private:
 	void CleanUpServer();
 
-	std::shared_ptr<Server> This;
-
+	std::atomic_bool IsStopped;
 	u_short Port;
 	SOCKET ServerSocket;
 	size_t MaxConnections;
-	std::atomic_bool IsStopped;
 	std::condition_variable ConditionVariable;
 	std::mutex ServerMutex;
-	std::vector<std::shared_ptr<Connection>> Connections;
+	std::list<Connection> Connections;
 
 	Capsulator::KyberKeyPair KyberKeyPair;
 	Signer::DilithiumKeyPair DilithiumKeyPair;

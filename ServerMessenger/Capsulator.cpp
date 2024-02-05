@@ -9,9 +9,7 @@ extern "C"
 
 size_t Capsulator::PublicBytes = CRYPTO_PUBLICKEYBYTES;
 
-Capsulator::KyberKeyPair::KyberKeyPair() noexcept :
-    PublicKey(),
-    PrivateKey()
+Capsulator::KyberKeyPair::KyberKeyPair() noexcept
 {
 
 }
@@ -38,9 +36,7 @@ Capsulator::KyberKeyPair& Capsulator::KyberKeyPair::operator=(KyberKeyPair&& oth
     return *this;
 }
 
-Capsulator::KyberCapsulated::KyberCapsulated() noexcept :
-    CipherText(),
-    SharedKey()
+Capsulator::KyberCapsulated::KyberCapsulated() noexcept
 {
 
 }

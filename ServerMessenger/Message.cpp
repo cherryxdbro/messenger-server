@@ -2,8 +2,7 @@
 
 #include "Message.h"
 
-Message::Message() noexcept :
-	Data()
+Message::Message() noexcept
 {
 
 }

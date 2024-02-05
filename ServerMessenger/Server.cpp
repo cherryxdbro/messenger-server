@@ -3,7 +3,6 @@
 #include "Server.h"
 
 Server::Server() noexcept :
-    This(this),
     Port(5678),
     ServerSocket(INVALID_SOCKET),
     MaxConnections(100),
@@ -14,13 +13,13 @@ Server::Server() noexcept :
 
 void Server::Start()
 {
-    spdlog::info(L"Start Server");
+    spdlog::info(L"start server");
     IsStopped = false;
     WinsockInitializer winsockInitializer;
     {
         if (winsockInitializer.WSAResult != 0)
         {
-            spdlog::error(L"WSAStartup failed");
+            spdlog::error(L"wsastartup failed");
             Stop();
             return;
         }
@@ -53,7 +52,7 @@ void Server::Start()
             Stop();
             return;
         }
-        spdlog::info(L"Listening on this port: [{}]", ntohs(localAddress.sin6_port));
+        spdlog::info(L"listening on this port: [{}]", ntohs(localAddress.sin6_port));
     }
 	while (!IsStopped)
 	{
@@ -64,14 +63,14 @@ void Server::Start()
             });
 		if (!IsStopped)
 		{
-			Connections.emplace_back(std::make_shared<Connection>(This))->Start();
+			Connections.emplace_back(Connection(this)).Start();
 		}
 	}
 }
 
 void Server::Stop()
 {
-    spdlog::info(L"Stop Server");
+    spdlog::info(L"stop server");
 	IsStopped = true;
 	ConditionVariable.notify_all();
     CleanUpServer();
@@ -91,12 +90,11 @@ SOCKET Server::GetSocket() const
     return ServerSocket;
 }
 
-//void Server::RemoveConnection(const Connection& connection)
-//{
-//    //std::remove(Connections.begin(),)
-//    //Connections.erase(Connections.begin() + connection - );
-//    if (!IsStopped)
-//    {
-//        ConditionVariable.notify_all();
-//    }
-//}
+void Server::RemoveConnection(const Connection& connectionToRemove)
+{
+    Connections.remove(connectionToRemove);
+    if (!IsStopped)
+    {
+        ConditionVariable.notify_all();
+    }
+}

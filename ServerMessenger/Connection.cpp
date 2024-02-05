@@ -4,15 +4,12 @@
 
 #include "Server.h"
 
-Connection::Connection() noexcept :
-    IsStopped(true),
-    TargetServer(),
-    ClientSocket(INVALID_SOCKET)
+Connection::Connection() noexcept
 {
 
 }
 
-Connection::Connection(std::shared_ptr<Server> server) noexcept :
+Connection::Connection(Server* server) noexcept :
     IsStopped(true),
     TargetServer(server),
     ClientSocket(INVALID_SOCKET)
@@ -20,22 +17,24 @@ Connection::Connection(std::shared_ptr<Server> server) noexcept :
 
 }
 
-Connection::Connection(const Connection& connection) noexcept :
-    IsStopped(true),
-    TargetServer(connection.TargetServer),
-    ClientSocket(INVALID_SOCKET)
-{
-    UNREFERENCED_PARAMETER(connection);
-    Start();
-}
-
 Connection::Connection(Connection&& connection) noexcept :
     IsStopped(connection.IsStopped.load()),
-    TargetServer(std::move(connection.TargetServer)),
+    TargetServer(connection.TargetServer),
     ClientSocket(connection.ClientSocket),
     Receiver(std::move(connection.Receiver))
 {
 
+}
+
+Connection& Connection::operator=(const Connection& connection) noexcept
+{
+    if (this != &connection)
+    {
+        IsStopped = connection.IsStopped.load();
+        TargetServer = connection.TargetServer;
+        ClientSocket = connection.ClientSocket;
+    }
+    return *this;
 }
 
 bool Connection::operator==(const Connection& connection) const noexcept
@@ -45,24 +44,24 @@ bool Connection::operator==(const Connection& connection) const noexcept
 
 void Connection::Start()
 {
-    spdlog::info(L"Start connection");
+    spdlog::info(L"start connection");
     IsStopped = false;
     SOCKADDR_IN6 clientInfo{};
     int clientInfoSize = sizeof(clientInfo);
-    if ((ClientSocket = accept(TargetServer.lock()->GetSocket(), (SOCKADDR*)&clientInfo, &clientInfoSize)) == INVALID_SOCKET)
+    if ((ClientSocket = accept(TargetServer->GetSocket(), (SOCKADDR*)&clientInfo, &clientInfoSize)) == INVALID_SOCKET)
     {
         spdlog::error(L"accept failed: [{}]", WSAGetLastError());
         return;
     }
     char addressBuffer[INET6_ADDRSTRLEN];
     inet_ntop(AF_INET6, &clientInfo.sin6_addr, addressBuffer, sizeof(addressBuffer));
-    spdlog::info("Client connected from: [{}]", addressBuffer);
+    spdlog::info("client connected from: [{}]", addressBuffer);
     Receiver = std::make_unique<std::jthread>(&Connection::Receive, this);
 }
 
 void Connection::Receive()
 {
-    spdlog::info(L"Start receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
+    spdlog::info(L"start receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
     while (!IsStopped)
     {
         size_t keysSize = Capsulator::PublicBytes + Signer::PublicBytes;
@@ -77,9 +76,10 @@ void Connection::Receive()
         {
             mes += std::to_string(i) + " ";
         }
-        spdlog::info("KYBER KEY {}", mes);//spdlog::to_hex(std::begin(data), std::begin(data) + Capsulator::PublicBytes));
+        spdlog::info("kyber_pk {}", mes);//spdlog::to_hex(std::begin(data), std::begin(data) + Capsulator::PublicBytes));
         //spdlog::info("DILITHIUM KEY{}", data);//spdlog::to_hex(std::begin(data) + Capsulator::PublicBytes, std::begin(data) + Signer::PublicBytes));
 
     }
-    spdlog::info(L"Stop receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
+    TargetServer->RemoveConnection(*this);
+    spdlog::info(L"stop receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
 }
