@@ -6,6 +6,7 @@
 
 #include <WS2tcpip.h>
 
+#include <queue>
 #include <bcrypt.h>
 
 #include <rapidjson/document.h>
@@ -21,4 +22,7 @@
 
 #include <filesystem>
 
-#include <winsqlite/winsqlite3.h>
+extern "C"
+{
+	#include <sqlite3.h>
+}

@@ -31,7 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.39.33519</VCToolsVersion>
+    <VCToolsVersion>14.38.33130</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -39,14 +39,14 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.39.33519</VCToolsVersion>
+    <VCToolsVersion>14.38.33130</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.39.33519</VCToolsVersion>
+    <VCToolsVersion>14.38.33130</VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -54,7 +54,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <VCToolsVersion>14.39.33519</VCToolsVersion>
+    <VCToolsVersion>14.38.33130</VCToolsVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -82,7 +82,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\TY_1_\source\repos\dilithium\ref;C:\Users\TY_1_\source\repos\kyber\ref;C:\Users\TY_1_\source\repos\messenger-server\ServerMessenger;C:\Users\TY_1_\source\repos\rapidjson\include;C:\Users\TY_1_\source\repos\spdlog\include;C:\Users\TY_1_\source\repos\sqlite-amalgamation-3450100;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -93,8 +93,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\TY_1_\source\repos\dilithium\build\ref\Release;C:\Users\TY_1_\source\repos\kyber\build\ref\Release;C:\Users\TY_1_\source\repos\spdlog\build\Release;C:\Users\TY_1_\source\repos\sqlite\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Advapi32.lib;bcrypt.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;kyber1024_ref.lib;kyber_fips202_ref.lib;spdlog.lib;sqlite.lib;Ws2_32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -110,11 +110,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\TY_1_\source\repos\dilithium\ref;C:\Users\TY_1_\source\repos\kyber\ref;C:\Users\TY_1_\source\repos\messenger-server\ServerMessenger;C:\Users\TY_1_\source\repos\rapidjson\include;C:\Users\TY_1_\source\repos\spdlog\include;C:\Users\TY_1_\source\repos\sqlite-amalgamation-3450100;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <OmitFramePointers />
+      <OmitFramePointers>true</OmitFramePointers>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
@@ -123,8 +123,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\TY_1_\source\repos\dilithium\build\ref\Release;C:\Users\TY_1_\source\repos\kyber\build\ref\Release;C:\Users\TY_1_\source\repos\spdlog\build\Release;C:\Users\TY_1_\source\repos\sqlite\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Advapi32.lib;bcrypt.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;kyber1024_ref.lib;kyber_fips202_ref.lib;spdlog.lib;sqlite.lib;Ws2_32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -138,7 +138,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\TY_1_\source\repos\dilithium\ref;C:\Users\TY_1_\source\repos\kyber\ref;C:\Users\TY_1_\source\repos\messenger-server\ServerMessenger;C:\Users\TY_1_\source\repos\rapidjson\include;C:\Users\TY_1_\source\repos\spdlog\include;C:\Users\TY_1_\source\repos\sqlite-amalgamation-3450100;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
@@ -148,8 +148,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\TY_1_\source\repos\dilithium\build\ref\Release;C:\Users\TY_1_\source\repos\kyber\build\ref\Release;C:\Users\TY_1_\source\repos\spdlog\build\Release;C:\Users\TY_1_\source\repos\sqlite\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Advapi32.lib;bcrypt.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;kyber1024_ref.lib;kyber_fips202_ref.lib;spdlog.lib;sqlite.lib;Ws2_32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>
@@ -165,20 +165,21 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>S:\Files\C++\T3\kyber\ref;S:\Files\C++\T3\dilithium\ref;S:\Files\C++\messenger-server\ServerMessenger;S:\Files\C++\T3\spdlog\include;S:\Files\C++\T3\rapidjson\include;S:\Files\C++\T3\sqlite-autoconf-3450000;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\TY_1_\source\repos\dilithium\ref;C:\Users\TY_1_\source\repos\kyber\ref;C:\Users\TY_1_\source\repos\messenger-server\ServerMessenger;C:\Users\TY_1_\source\repos\rapidjson\include;C:\Users\TY_1_\source\repos\spdlog\include;C:\Users\TY_1_\source\repos\sqlite-amalgamation-3450100;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>S:\Files\C++\T3\kyber\build\ref\Release;S:\Files\C++\T3\dilithium\build\ref\Release;S:\Files\C++\T3\spdlog\build\Release;S:\Files\C++\T3\sqlite-dll-win-x64-3450000;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kyber1024_ref.lib;fips202_ref.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;spdlog.lib;Ws2_32.lib;Advapi32.lib;bcrypt.lib;sqlite3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\TY_1_\source\repos\dilithium\build\ref\Release;C:\Users\TY_1_\source\repos\kyber\build\ref\Release;C:\Users\TY_1_\source\repos\spdlog\build\Release;C:\Users\TY_1_\source\repos\sqlite\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Advapi32.lib;bcrypt.lib;dilithium5aes_ref.lib;dilithium_aes256ctr_ref.lib;dilithium_fips202_ref.lib;kyber1024_ref.lib;kyber_fips202_ref.lib;spdlog.lib;sqlite.lib;Ws2_32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
     </Link>

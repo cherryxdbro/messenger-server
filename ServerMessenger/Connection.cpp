@@ -4,15 +4,20 @@
 
 #include "Server.h"
 
-Connection::Connection() noexcept
+Connection::Connection() noexcept :
+    IsStopped(false),
+    TargetServer(nullptr),
+    ClientSocket(INVALID_SOCKET),
+    Receiver(nullptr)
 {
 
 }
 
 Connection::Connection(Server* server) noexcept :
-    IsStopped(true),
+    IsStopped(false),
     TargetServer(server),
-    ClientSocket(INVALID_SOCKET)
+    ClientSocket(INVALID_SOCKET),
+    Receiver(nullptr)
 {
 
 }
@@ -21,25 +26,33 @@ Connection::Connection(Connection&& connection) noexcept :
     IsStopped(connection.IsStopped.load()),
     TargetServer(connection.TargetServer),
     ClientSocket(connection.ClientSocket),
-    Receiver(std::move(connection.Receiver))
+    Receiver(connection.Receiver)
 {
 
 }
 
+Connection::~Connection() noexcept
+{
+    if (Receiver)
+    {
+        if (Receiver->joinable())
+        {
+            Receiver->join();
+        }
+    }
+}
+
 Connection& Connection::operator=(const Connection& connection) noexcept
 {
-    if (this != &connection)
-    {
-        IsStopped = connection.IsStopped.load();
-        TargetServer = connection.TargetServer;
-        ClientSocket = connection.ClientSocket;
-    }
+    IsStopped = connection.IsStopped.load();
+    TargetServer = connection.TargetServer;
+    ClientSocket = connection.ClientSocket;
     return *this;
 }
 
 bool Connection::operator==(const Connection& connection) const noexcept
 {
-    return IsStopped == connection.IsStopped.load();
+    return this == &connection;
 }
 
 void Connection::Start()
@@ -56,7 +69,7 @@ void Connection::Start()
     char addressBuffer[INET6_ADDRSTRLEN];
     inet_ntop(AF_INET6, &clientInfo.sin6_addr, addressBuffer, sizeof(addressBuffer));
     spdlog::info("client connected from: [{}]", addressBuffer);
-    Receiver = std::make_unique<std::jthread>(&Connection::Receive, this);
+    Receiver = new std::jthread(&Connection::Receive, this);
 }
 
 void Connection::Receive()

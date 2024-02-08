@@ -18,6 +18,7 @@ public:
 	SOCKET GetSocket() const;
 
 	void RemoveConnection(const Connection& connection);
+	void RemoverConnections();
 
 private:
 	void CleanUpServer();
@@ -26,9 +27,11 @@ private:
 	u_short Port;
 	SOCKET ServerSocket;
 	size_t MaxConnections;
-	std::condition_variable ConditionVariable;
+	std::condition_variable NewConnection;
 	std::mutex ServerMutex;
+	std::mutex ConnectionsMutex;
 	std::list<Connection> Connections;
+	std::queue<const Connection*> ConnectionsToRemove;
 
 	Capsulator::KyberKeyPair KyberKeyPair;
 	Signer::DilithiumKeyPair DilithiumKeyPair;

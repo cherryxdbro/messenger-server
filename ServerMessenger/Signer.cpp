@@ -4,7 +4,7 @@
 
 extern "C"
 {
-    #include "sign.h"
+    #include <sign.h>
 }
 
 size_t Signer::PublicBytes = CRYPTO_PUBLICKEYBYTES;
@@ -28,11 +28,8 @@ Signer::DilithiumKeyPair::DilithiumKeyPair(DilithiumKeyPair&& other) noexcept
 
 Signer::DilithiumKeyPair& Signer::DilithiumKeyPair::operator=(DilithiumKeyPair&& other) noexcept
 {
-    if (this != &other)
-    {
-        PublicKey.swap(other.PublicKey);
-        PrivateKey.swap(other.PrivateKey);
-    }
+    PublicKey.swap(other.PublicKey);
+    PrivateKey.swap(other.PrivateKey);
     return *this;
 }
 

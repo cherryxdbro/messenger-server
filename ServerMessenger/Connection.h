@@ -9,10 +9,7 @@ public:
 	Connection(Server* server) noexcept;
 	Connection(Connection&& connection) noexcept;
 
-	~Connection()
-	{
-		IsStopped = false;
-	}
+	~Connection() noexcept;
 
 	Connection& operator=(const Connection& connection) noexcept;
 	bool operator==(const Connection& connection) const noexcept;
@@ -25,5 +22,5 @@ private:
 	std::atomic_bool IsStopped;
 	Server* TargetServer;
 	SOCKET ClientSocket;
-	std::unique_ptr<std::jthread> Receiver;
+	std::jthread* Receiver;
 };

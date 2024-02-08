@@ -29,9 +29,7 @@ struct Capsulator final
 	static KyberKeyPair MakeKyberKeyPair() noexcept;
 
 	static KyberCapsulated KyberEncapsulateKey(const std::vector<uint8_t>& publicKey) noexcept;
-	static KyberCapsulated KyberDecapsulateKey(const std::vector<uint8_t>& cipherText, const std::vector<uint8_t>& privateKey) noexcept;
-
-	static bool KyberVerify(const std::vector<uint8_t>& sharedKey1, const std::vector<uint8_t>& sharedKey2) noexcept;
+	static KyberCapsulated KyberDecapsulateKey(std::vector<uint8_t>&& cipherText, const std::vector<uint8_t>& privateKey) noexcept;
 
 	static size_t PublicBytes;
 };

@@ -4,7 +4,7 @@
 
 extern "C"
 {
-    #include "kem.h"
+    #include <kem.h>
 }
 
 size_t Capsulator::PublicBytes = CRYPTO_PUBLICKEYBYTES;
@@ -28,11 +28,8 @@ Capsulator::KyberKeyPair::KyberKeyPair(KyberKeyPair&& other) noexcept
 
 Capsulator::KyberKeyPair& Capsulator::KyberKeyPair::operator=(KyberKeyPair&& other) noexcept
 {
-    if (this != &other)
-    {
-        PublicKey.swap(other.PublicKey);
-        PrivateKey.swap(other.PrivateKey);
-    }
+    PublicKey.swap(other.PublicKey);
+    PrivateKey.swap(other.PrivateKey);
     return *this;
 }
 
@@ -55,11 +52,8 @@ Capsulator::KyberCapsulated::KyberCapsulated(KyberCapsulated&& other) noexcept
 
 Capsulator::KyberCapsulated& Capsulator::KyberCapsulated::operator=(KyberCapsulated&& other) noexcept
 {
-    if (this != &other)
-    {
-        CipherText.swap(other.CipherText);
-        SharedKey.swap(other.SharedKey);
-    }
+    CipherText.swap(other.CipherText);
+    SharedKey.swap(other.SharedKey);
     return *this;
 }
 
@@ -85,19 +79,14 @@ Capsulator::KyberCapsulated Capsulator::KyberEncapsulateKey(const std::vector<ui
     return { std::move(cipherText), std::move(sharedKey) };
 }
 
-Capsulator::KyberCapsulated Capsulator::KyberDecapsulateKey(const std::vector<uint8_t>& cipherText, const std::vector<uint8_t>& privateKey) noexcept
+Capsulator::KyberCapsulated Capsulator::KyberDecapsulateKey(std::vector<uint8_t>&& cipherText, const std::vector<uint8_t>& privateKey) noexcept
 {
     std::vector<uint8_t> cipherTextCopy(CRYPTO_CIPHERTEXTBYTES);
     std::vector<uint8_t> sharedKey(CRYPTO_BYTES);
     memcpy_s(cipherTextCopy.data(), CRYPTO_CIPHERTEXTBYTES, cipherText.data(), CRYPTO_CIPHERTEXTBYTES);
-    if (crypto_kem_dec(sharedKey.data(), cipherTextCopy.data(), privateKey.data()))
+    if (crypto_kem_dec(sharedKey.data(), cipherText.data(), privateKey.data()))
     {
         return {  };
     }
     return { std::move(cipherTextCopy), std::move(sharedKey) };
-}
-
-bool Capsulator::KyberVerify(const std::vector<uint8_t>& sharedKey1, const std::vector<uint8_t>& sharedKey2) noexcept
-{
-    return memcmp(sharedKey1.data(), sharedKey2.data(), CRYPTO_BYTES) == 0;
 }

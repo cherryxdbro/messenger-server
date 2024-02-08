@@ -54,6 +54,7 @@ void Server::Start()
         }
         spdlog::info(L"listening on this port: [{}]", ntohs(localAddress.sin6_port));
     }
+    std::jthread removerConnections(&Server::RemoverConnections, this);
 	while (!IsStopped)
 	{
 		std::unique_lock<std::mutex> lock(ServerMutex);
@@ -90,11 +91,27 @@ SOCKET Server::GetSocket() const
     return ServerSocket;
 }
 
-void Server::RemoveConnection(const Connection& connectionToRemove)
+void Server::RemoveConnection(const Connection& connection)
 {
-    Connections.remove(connectionToRemove);
+    std::unique_lock<std::mutex> lock(ConnectionsMutex);
+    ConnectionsToRemove.push(&connection);
     if (!IsStopped)
     {
         ConditionVariable.notify_all();
+    }
+}
+
+void Server::RemoverConnections()
+{
+    while (!IsStopped)
+    {
+        if (!IsStopped)
+        {
+            while (!ConnectionsToRemove.empty())
+            {
+                Connections.remove(*ConnectionsToRemove.front());
+                ConnectionsToRemove.pop();
+            }
+        }
     }
 }
