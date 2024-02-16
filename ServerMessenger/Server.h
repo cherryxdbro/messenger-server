@@ -18,11 +18,9 @@ public:
 	SOCKET GetSocket() const;
 
 	void RemoveConnection(const Connection& connection);
-	void RemoverConnections();
+	void —onnection—leaner();
 
 private:
-	void CleanUpServer();
-
 	std::atomic_bool IsStopped;
 	u_short Port;
 	SOCKET ServerSocket;

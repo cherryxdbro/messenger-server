@@ -33,12 +33,13 @@ Connection::Connection(Connection&& connection) noexcept :
 
 Connection::~Connection() noexcept
 {
+    if (ClientSocket != INVALID_SOCKET)
+    {
+        closesocket(ClientSocket);
+    }
     if (Receiver)
     {
-        if (Receiver->joinable())
-        {
-            Receiver->join();
-        }
+        delete Receiver;
     }
 }
 
@@ -57,7 +58,7 @@ bool Connection::operator==(const Connection& connection) const noexcept
 
 void Connection::Start()
 {
-    spdlog::info(L"start connection");
+    spdlog::info(L"start connection in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
     IsStopped = false;
     SOCKADDR_IN6 clientInfo{};
     int clientInfoSize = sizeof(clientInfo);
@@ -74,7 +75,7 @@ void Connection::Start()
 
 void Connection::Receive()
 {
-    spdlog::info(L"start receive in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
+    spdlog::info(L"start receive in this thread: [{:>}]", std::this_thread::get_id());
     while (!IsStopped)
     {
         size_t keysSize = Capsulator::PublicBytes + Signer::PublicBytes;
@@ -83,13 +84,14 @@ void Connection::Receive()
         if (bytesReceived <= 0)
         {
             IsStopped = true;
+            break;
         }
         std::string mes;
         for (uint8_t& i : keys)
         {
             mes += std::to_string(i) + " ";
         }
-        spdlog::info("kyber_pk {}", mes);//spdlog::to_hex(std::begin(data), std::begin(data) + Capsulator::PublicBytes));
+        spdlog::info("keys {}", mes);//spdlog::to_hex(std::begin(data), std::begin(data) + Capsulator::PublicBytes));
         //spdlog::info("DILITHIUM KEY{}", data);//spdlog::to_hex(std::begin(data) + Capsulator::PublicBytes, std::begin(data) + Signer::PublicBytes));
 
     }

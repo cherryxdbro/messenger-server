@@ -13,22 +13,22 @@ Server::Server() noexcept :
 
 void Server::Start()
 {
-    spdlog::info(L"start server");
+    spdlog::info(L"start server in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
     IsStopped = false;
     WinsockInitializer winsockInitializer;
+    if (winsockInitializer.WSAResult != 0)
     {
-        if (winsockInitializer.WSAResult != 0)
-        {
-            spdlog::error(L"wsastartup failed");
-            Stop();
-            return;
-        }
-        if ((ServerSocket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-        {
-            spdlog::error(L"socket failed: [{}]", WSAGetLastError());
-            Stop();
-            return;
-        }
+        spdlog::error(L"wsastartup failed");
+        Stop();
+        return;
+    }
+    if ((ServerSocket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
+    {
+        spdlog::error(L"socket failed: [{}]", WSAGetLastError());
+        Stop();
+        return;
+    }
+    {
         SOCKADDR_IN6 localAddress{};
         localAddress.sin6_addr = in6addr_any;
         localAddress.sin6_family = AF_INET6;
@@ -38,52 +38,49 @@ void Server::Start()
         {
             spdlog::error(L"bind failed: [{}]", WSAGetLastError());
             Stop();
+            closesocket(ServerSocket);
             return;
         }
         if (listen(ServerSocket, SOMAXCONN) == SOCKET_ERROR)
         {
             spdlog::error(L"listen failed: [{}]", WSAGetLastError());
             Stop();
+            closesocket(ServerSocket);
             return;
         }
         if (getsockname(ServerSocket, (SOCKADDR*)&localAddress, &addressLength) == SOCKET_ERROR)
         {
             spdlog::error(L"getsockname failed: [{}]", WSAGetLastError());
             Stop();
+            closesocket(ServerSocket);
             return;
         }
         spdlog::info(L"listening on this port: [{}]", ntohs(localAddress.sin6_port));
     }
-    std::jthread removerConnections(&Server::RemoverConnections, this);
-	while (!IsStopped)
+    std::jthread removerConnections(&Server::—onnection—leaner, this);
+	while (true)
 	{
 		std::unique_lock<std::mutex> lock(ServerMutex);
-		ConditionVariable.wait(lock, [this]()
+        NewConnection.wait(lock, [this]()
             {
                 return Connections.size() < MaxConnections || IsStopped;
             });
-		if (!IsStopped)
+		if (IsStopped)
 		{
-			Connections.emplace_back(Connection(this)).Start();
+            break;
 		}
+        Connections.emplace_back(Connection(this)).Start();
 	}
+    closesocket(ServerSocket);
+    spdlog::info(L"stop server in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
 }
 
 void Server::Stop()
 {
-    spdlog::info(L"stop server");
 	IsStopped = true;
-	ConditionVariable.notify_all();
-    CleanUpServer();
-}
-
-void Server::CleanUpServer()
-{
+    NewConnection.notify_all();
     Connections.clear();
-    if (ServerSocket != INVALID_SOCKET)
-    {
-        closesocket(ServerSocket);
-    }
+    ConnectionsToRemove.swap(*new std::queue<const Connection*>());
 }
 
 SOCKET Server::GetSocket() const
@@ -93,25 +90,32 @@ SOCKET Server::GetSocket() const
 
 void Server::RemoveConnection(const Connection& connection)
 {
-    std::unique_lock<std::mutex> lock(ConnectionsMutex);
-    ConnectionsToRemove.push(&connection);
     if (!IsStopped)
     {
-        ConditionVariable.notify_all();
+        ConnectionsToRemove.emplace(&connection);
+        NewConnection.notify_all();
     }
 }
 
-void Server::RemoverConnections()
+void Server::—onnection—leaner()
 {
-    while (!IsStopped)
+    spdlog::info(L"start connection cleaner in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
+    while (true)
     {
-        if (!IsStopped)
-        {
-            while (!ConnectionsToRemove.empty())
+        std::unique_lock<std::mutex> lock(ConnectionsMutex);
+        NewConnection.wait(lock, [this]()
             {
-                Connections.remove(*ConnectionsToRemove.front());
-                ConnectionsToRemove.pop();
-            }
+                return !ConnectionsToRemove.empty() || IsStopped;
+            });
+        if (IsStopped)
+        {
+            break;
+        }
+        while (!ConnectionsToRemove.empty())
+        {
+            Connections.remove(*ConnectionsToRemove.front());
+            ConnectionsToRemove.pop();
         }
     }
+    spdlog::info(L"stop connection cleaner in this thread: [{}]", std::this_thread::get_id()._Get_underlying_id());
 }
